@@ -1,8 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:miniblog/models/blog.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:miniblog/blocs/detail_bloc/detail_bloc.dart';
+import 'package:miniblog/blocs/detail_bloc/detail_event.dart';
+import 'package:miniblog/blocs/detail_bloc/detail_state.dart';
 
 class BlogDetail extends StatefulWidget {
   final String id;
@@ -14,71 +14,58 @@ class BlogDetail extends StatefulWidget {
 
 class _BlogDetailState extends State<BlogDetail> {
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    fetchBlogDetails();
-  }
-
-  Future<Blog> fetchBlogDetails() async {
-    Uri url = Uri.parse(
-        "https://tobetoapi.halitkalayci.com/api/Articles/${widget.id}");
-    final response = await http.get(url);
-    final jsonData = json.decode(response.body);
-    return Blog.fromJson(jsonData);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: fetchBlogDetails(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(snapshot.data!.title),
+    return BlocBuilder<DetailBloc, DetailState>(builder: (context, state) {
+      if (state is DetailInitial) {
+        context.read<DetailBloc>().add(FetchDetailById(id: widget.id));
+        return const Center(
+          child: Text("İstek Atılıyor..."),
+        );
+      }
+      if (state is DetailLoading) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+      if (state is DetailLoaded) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(state.blog.title),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                AspectRatio(
+                    aspectRatio: 4 / 2,
+                    child: Image.network(state.blog.thumbnail)),
+                Text(
+                  state.blog.author,
+                  style: const TextStyle(
+                      color: Colors.black45,
+                      fontStyle: FontStyle.italic,
+                      fontSize: 16),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.05,
+                ),
+                Text(
+                  state.blog.content,
+                ),
+              ],
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  AspectRatio(
-                      aspectRatio: 4 / 2,
-                      child: Image.network(snapshot.data!.thumbnail)),
-                  Text(
-                    snapshot.data!.author,
-                    style: const TextStyle(
-                        color: Colors.black45,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 16),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                  ),
-                  Text(
-                    snapshot.data!.content,
-                  ),
-                ],
-              ),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text("Detaylar"),
-            ),
-            body: Center(
-              child: Text(snapshot.error.toString()),
-            ),
-          );
-        } else {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-      },
-    );
+          ),
+        );
+      }
+      if (state is DetailError) {
+        return Center(
+          child: Text("Hata"),
+        );
+      }
+
+      return Center(
+        child: Text("Unknown State"),
+      );
+    });
   }
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:miniblog/blocs/detail_bloc/detail_bloc.dart';
+import 'package:miniblog/blocs/detail_bloc/detail_event.dart';
 import 'package:miniblog/models/blog.dart';
 import 'package:miniblog/screens/blog_detail.dart';
 
@@ -10,10 +13,11 @@ class BlogItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        context.read<DetailBloc>().add(ResetEvent());
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BlogDetail(id: blog.id),
+            builder: (context) => BlogDetail(id: blog.id!),
           ),
         );
       },

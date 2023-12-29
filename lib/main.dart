@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:miniblog/blocs/article_bloc/article_bloc.dart';
+import 'package:miniblog/blocs/detail_bloc/detail_bloc.dart';
+import 'package:miniblog/repositories/article_repository.dart';
 import 'package:miniblog/screens/home_page.dart';
 
 void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider<ArticleBloc>(
+        create: (context) =>
+            ArticleBloc(articleRepository: ArticleRepository()),
+      ),
+      BlocProvider<DetailBloc>(
+        create: (context) => DetailBloc(articleRepository: ArticleRepository()),
+      )
+    ],
+    child: MaterialApp(
       theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey)),
       title: 'Mini Blog',
       home: HomePage(),
-    );
-  }
+    ),
+  ));
 }

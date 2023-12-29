@@ -1,12 +1,12 @@
 class Blog {
-  String id;
+  String? id;
   String title;
   String content;
   String thumbnail;
   String author;
 
   Blog(
-      {required this.id,
+      {this.id,
       required this.title,
       required this.content,
       required this.thumbnail,
