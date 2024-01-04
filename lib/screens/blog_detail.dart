@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:miniblog/blocs/article_bloc/article_bloc.dart';
+import 'package:miniblog/blocs/article_bloc/article_event.dart';
 import 'package:miniblog/blocs/detail_bloc/detail_bloc.dart';
 import 'package:miniblog/blocs/detail_bloc/detail_event.dart';
 import 'package:miniblog/blocs/detail_bloc/detail_state.dart';
@@ -31,6 +33,16 @@ class _BlogDetailState extends State<BlogDetail> {
         return Scaffold(
           appBar: AppBar(
             title: Text(state.blog.title),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    context
+                        .read<ArticleBloc>()
+                        .add(DeleteArticleById(id: widget.id));
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.delete))
+            ],
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),

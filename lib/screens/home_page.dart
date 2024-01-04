@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: () async {
-              context.read<ArticleBloc>().add(ResetEvent());
               bool result = await Navigator.push(
                   context, MaterialPageRoute(builder: (context) => AddBlog()));
 

@@ -13,7 +13,7 @@ class BlogItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.read<DetailBloc>().add(ResetEvent());
+        context.read<DetailBloc>().add(FetchDetailById(id: blog.id!));
         Navigator.push(
           context,
           MaterialPageRoute(

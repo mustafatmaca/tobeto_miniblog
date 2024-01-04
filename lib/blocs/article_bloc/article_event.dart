@@ -1,4 +1,10 @@
-abstract class ArticleEvent {}
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:equatable/equatable.dart';
+
+abstract class ArticleEvent extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
 
 class FetchArticles extends ArticleEvent {}
 
@@ -13,6 +19,18 @@ class PostArticle extends ArticleEvent {
       required this.content,
       required this.thumbnail,
       required this.author});
+
+  @override
+  List<Object?> get props => [title, content, thumbnail, author];
 }
 
-class ResetEvent extends ArticleEvent {}
+class DeleteArticleById extends ArticleEvent {
+  final String id;
+
+  DeleteArticleById({
+    required this.id,
+  });
+
+  @override
+  List<Object?> get props => [id];
+}

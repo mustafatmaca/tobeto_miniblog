@@ -8,7 +8,6 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
 
   DetailBloc({required this.articleRepository}) : super(DetailInitial()) {
     on<FetchDetailById>(_onFetchDetailById);
-    on<ResetEvent>(_onResetEvent);
   }
 
   void _onFetchDetailById(
@@ -21,9 +20,5 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
     } catch (e) {
       emit(DetailError());
     }
-  }
-
-  void _onResetEvent(ResetEvent event, Emitter<DetailState> emit) async {
-    emit(DetailInitial());
   }
 }

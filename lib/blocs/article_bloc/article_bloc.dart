@@ -9,8 +9,7 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
   ArticleBloc({required this.articleRepository}) : super(ArticleInitial()) {
     on<FetchArticles>(_onFetchArticles);
     on<PostArticle>(_onPostArticle);
-
-    on<ResetEvent>(_onResetEvent);
+    on<DeleteArticleById>(_onDeleteArticle);
   }
 
   void _onFetchArticles(FetchArticles event, Emitter<ArticleState> emit) async {
@@ -34,7 +33,13 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
     }
   }
 
-  void _onResetEvent(ResetEvent event, Emitter<ArticleState> emit) async {
-    emit(ArticleInitial());
+  void _onDeleteArticle(
+      DeleteArticleById event, Emitter<ArticleState> emit) async {
+    try {
+      await articleRepository.deleteBlogById(event.id);
+      emit(ArticleInitial());
+    } catch (e) {
+      emit(ArticleError());
+    }
   }
 }

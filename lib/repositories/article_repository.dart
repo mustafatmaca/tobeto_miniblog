@@ -33,4 +33,10 @@ class ArticleRepository {
 
     await request.send();
   }
+
+  Future<void> deleteBlogById(String id) async {
+    Uri url =
+        Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles/${id}");
+    await http.delete(url);
+  }
 }

@@ -1,9 +1,11 @@
-class Blog {
-  String? id;
-  String title;
-  String content;
-  String thumbnail;
-  String author;
+import 'package:equatable/equatable.dart';
+
+class Blog extends Equatable {
+  final String? id;
+  final String title;
+  final String content;
+  final String thumbnail;
+  final String author;
 
   Blog(
       {this.id,
@@ -29,4 +31,7 @@ class Blog {
     data['author'] = this.author;
     return data;
   }
+
+  @override
+  List<Object?> get props => [id, title, content, thumbnail, author];
 }
